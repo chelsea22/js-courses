@@ -1,4 +1,4 @@
-import { compose, withStateHandlers, withHandlers, lifecycle, branch, renderComponent } from 'recompose';
+import { compose, withStateHandlers, withHandlers, lifecycle, branch, renderComponent, withProps } from 'recompose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { db } from '../../utils';
@@ -6,8 +6,27 @@ import { db } from '../../utils';
 import AppLoader from '../Loaders/AppLoader';
 import Component from './Component';
 
+const prepareAnswers = ({ answers, votes, sortBy }) => {
+  if (!votes.length || sortBy === 'createdAt') return answers;
+  
+  const answersWithGoodVotes = votes
+    .filter(vote => vote.isPositive)
+    .map(vote => answers.filter(answer => answer._id === vote.answerId)[0]);
+  const answersWithBadVotes = votes
+    .filter(vote => !vote.isPositive)
+    .map(vote => answers.filter(answer => answer._id === vote.answerId)[0]);
+
+  if (sortBy === 'best') {
+    return[ ...answersWithGoodVotes, ...answersWithBadVotes ];
+  } else if (sortBy === 'worst') {
+    return [ ...answersWithBadVotes, ...answersWithGoodVotes ];
+  }
+  return answers;
+}
+
 const mapStateToProps = state => ({
   user: state.user,
+  sortBy: state.answerSort,
 });
 
 const enhance = compose(
@@ -55,6 +74,8 @@ const enhance = compose(
       }
     }
   }),
+
+  withProps(props => ({ answers: prepareAnswers(props) })),
 );
 
 

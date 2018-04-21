@@ -4,12 +4,11 @@ import { branch, compose, lifecycle, renderComponent, withStateHandlers } from '
 import { Redirect, withRouter } from 'react-router';
 import { db } from '../../utils';
 import AppLoader from '../Loaders/AppLoader';
+import {answerSortActions } from '../../modules/answerSort';
 import Component from './Component';
 
 const mapDispatchToProps = (dispatch) => ({
-  setAnswerSorting: () => {
-    // TODO: CODE FOR YOUR HOMEWORK HERE
-  }
+  setAnswerSorting: value => dispatch(answerSortActions.setAnswerSort(value)),
 });
 
 const enhance = compose(
@@ -34,6 +33,9 @@ const enhance = compose(
         }
 
         this.setState({ question, author, isFetching: false });
+      },
+      componentWillUnmount() {
+        this.props.setAnswerSorting('createdAt');
       },
     }),
   ),

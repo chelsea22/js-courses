@@ -39,8 +39,7 @@ const QuestionPage = ({ question, author, setAnswerSorting, sortBy }) => (
     <Description>{question.description}</Description>
 
   <SortByDropdown
-    // value={sortBy}
-    onChange={setAnswerSorting}
+    onChange={e => setAnswerSorting(e.target.value)}
   >
       <option value="createdAt">Time</option>
       <option value="best">Best</option>
