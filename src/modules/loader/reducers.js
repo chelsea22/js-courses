@@ -2,6 +2,7 @@ import { questionTypes } from './';
 
 const defaultState = {
   CREATE_QUESTION: false,
+  MORE_QUESTION: false,
 };
 
 export default (state = defaultState, action) => {

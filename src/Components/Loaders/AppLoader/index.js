@@ -12,6 +12,11 @@ const Wrapper = styled.span`
   right: 0;
   left: 0;
   bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
 `;
 
 

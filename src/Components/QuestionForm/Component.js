@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Form from '../Form/Component';
 import TextInput from '../TextInput/Component';
 import Button from '../Buttons/Button';
+import AppLoader from '../Loaders/AppLoader';
 import StyledHeader from '../Common/StyledHeader';
 
 
@@ -25,49 +26,53 @@ const ButtonWrapper = styled.div`
 const getHeader = isEdit => isEdit ? 'Edit Question' : 'Add Question';
 
 
-const QuestionForm = ({ title, description, tags, submitReady, onChange, onSubmit, onRemove, match }) => (
+const QuestionForm = ({ title, description, tags, submitReady, onChange, onSubmit, onRemove, match, loader }) => (
   <Form onSubmit={onSubmit}>
     <StyledHeader>
       {getHeader(match.params.questionId)}
     </StyledHeader>
+    {loader 
+      ? <AppLoader />
+      : <React.Fragment>
+        <TextInput
+          autoFocus
+          name="title"
+          placeholder="Title"
+          value={title}
+          onChange={onChange('title')}
+        />
 
-    <TextInput
-      autoFocus
-      name="title"
-      placeholder="Title"
-      value={title}
-      onChange={onChange('title')}
-    />
+        <Description
+          name="description"
+          placeholder="Description..."
+          value={description}
+          onChange={onChange('description')}
+        />
 
-    <Description
-      name="description"
-      placeholder="Description..."
-      value={description}
-      onChange={onChange('description')}
-    />
+        <TextInput
+          name="tags"
+          placeholder="Type tags by whitespace"
+          value={tags}
+          onChange={onChange('tags')}
+        />
 
-    <TextInput
-      name="tags"
-      placeholder="Type tags by whitespace"
-      value={tags}
-      onChange={onChange('tags')}
-    />
+        <ButtonWrapper>
+          {!!match.params.questionId && (
+            <Button onClick={onRemove}>
+              Remove
+            </Button>
+          )}
 
-    <ButtonWrapper>
-      {!!match.params.questionId && (
-        <Button onClick={onRemove}>
-          Remove
-        </Button>
-      )}
-
-      <Button
-        primary
-        type="submit"
-        disabled={!submitReady}
-      >
-        Submit
-      </Button>
-    </ButtonWrapper>
+          <Button
+            primary
+            type="submit"
+            disabled={!submitReady}
+          >
+            Submit
+          </Button>
+        </ButtonWrapper>
+      </React.Fragment>
+    }
   </Form>
 );
 

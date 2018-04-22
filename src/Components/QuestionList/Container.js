@@ -4,6 +4,7 @@ import * as R from 'ramda';
 
 import { db } from '../../utils';
 import AppLoader from '../Loaders/AppLoader';
+import { loaderActions } from '../../modules/loader'; 
 import Component from './Component';
 
 
@@ -13,6 +14,9 @@ const matchBy = R.curry((search, string) => new RegExp(`${search}`, 'gi').test(s
 
 const filterByTitle = search => R.filter(R.compose(matchBy(search), R.prop('title')));
 
+const mapDispatchToProps = (dispatch) => ({
+  setLoader: () => dispatch(loaderActions.loadMoreQuestions()),
+});
 
 const DIRECTION = {
   title: R.ascend,
@@ -30,10 +34,11 @@ const prepareQuestions = ({ questions, search, limit, sortBy }) => R.compose(
 const mapStateToProps = state => ({
   search: state.search,
   sortBy: state.sort,
+  loader: state.loader.MORE_QUESTION
 });
 
 const enhance = compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   withStateHandlers(
     { questions: [], isFetching: true, limit: LIMIT },
     { onIncreaseLimit: ({ limit }) => () => ({ limit:  limit + LIMIT }) }
